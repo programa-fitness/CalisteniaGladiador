@@ -647,29 +647,31 @@ fbq('track', 'PageView');
     </div>
 
     <div class="vsl-video-wrapper">
-      <video id="vslVideo" class="vsl-video" preload="metadata" disablePictureInPicture>
+      <video id="vslVideo" class="vsl-video" preload="metadata" disablePictureInPicture onclick="togglePlayVSL()">
         <source src="https://res.cloudinary.com/dw4df9eqz/video/upload/1000299540_bjzo54.mp4" type="video/mp4">
         Tu navegador no soporta video HTML5
       </video>
-      <!-- Botón play personalizado -->
-      <div id="vslPlayBtn" onclick="togglePlay()" style="
+      <!-- Ícono play centrado, desaparece al reproducir -->
+      <div id="vslPlayOverlay" onclick="togglePlayVSL()" style="
         position: absolute;
-        bottom: 18px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 52px;
-        height: 52px;
-        background: rgba(126,211,33,0.92);
-        border-radius: 50%;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        box-shadow: 0 3px 12px rgba(0,0,0,0.35);
-        transition: transform 0.2s, background 0.2s;
-        z-index: 10;
+        background: rgba(0,0,0,0.15);
+        transition: opacity 0.2s;
       ">
-        <span id="vslPlayIcon" style="font-size: 22px; color: white; margin-left: 4px;">▶</span>
+        <div style="
+          width: 60px; height: 60px;
+          background: rgba(126,211,33,0.9);
+          border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+        ">
+          <span style="font-size: 26px; color: white; margin-left: 5px;">▶</span>
+        </div>
       </div>
       <div class="vsl-progress-bar">
         <div class="vsl-progress-fill" id="vslProgressFill"></div>
@@ -1045,13 +1047,11 @@ function inicializarVSL() {
   });
 
   video.addEventListener("play", function() {
-    document.getElementById("vslPlayIcon").textContent = "⏸";
-    document.getElementById("vslPlayIcon").style.marginLeft = "0";
+    document.getElementById("vslPlayOverlay").style.display = "none";
   });
 
   video.addEventListener("pause", function() {
-    document.getElementById("vslPlayIcon").textContent = "▶";
-    document.getElementById("vslPlayIcon").style.marginLeft = "4px";
+    document.getElementById("vslPlayOverlay").style.display = "flex";
     if (!videoCompleto && video.currentTime > 0 && video.currentTime < video.duration) {
       blockedOverlay.classList.add("active");
     }
@@ -1068,13 +1068,12 @@ function inicializarVSL() {
   video.play();
 }
 
-function togglePlay() {
+function togglePlayVSL() {
   const video = document.getElementById("vslVideo");
   if (video.paused) {
     video.play();
-  } else {
-    video.pause();
   }
+  // Si está reproduciendo, el clic no pausa — el overlay maneja eso
 }
 
 function reanudarVideo() {
