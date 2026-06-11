@@ -1,13 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta property="og:title" content="Desafío Calistenia 21 Días - Programa Personalizado" />
-<meta property="og:description" content="Descubre tu plan personalizado de calistenia. Transforma tu cuerpo en 21 días." />
-<meta property="og:url" content="https://programa-fitness.github.io/programa-fitness/" />
-<meta property="og:type" content="website" />
-
 <title>Desafío Calistenia 21 Días - Programa Personalizado</title>
 
 <style>
@@ -420,21 +413,6 @@ input[type="range"]::-moz-range-thumb {
 }
 </style>
 
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '1684700866050407');
-fbq('track', 'PageView');
-</script>
-
-
 </head>
 
 <body>
@@ -449,7 +427,7 @@ fbq('track', 'PageView');
   <h3 style="color:#7ED321; font-size: 16px; margin: 0 0 15px;">PROGRAMA PERSONALIZADO</h3>
   
   <p style="font-size: 14px; color: #1d1d1d; margin: 0 20px 10px; line-height: 1.6;">
-    Método práctico y eficaz para entrenar en cualquier lugar y optimizar tus resultados en solo 21 días
+    Método práctico y eficaz para entrenar en cualquier lugar y optimizar tus resultados en solo 21 días.
   </p>
   
   <div class="hero">
@@ -639,11 +617,11 @@ fbq('track', 'PageView');
     </div>
 
     <div class="vsl-video-wrapper">
-      <video id="vslVideo" class="vsl-video" preload="metadata" disablePictureInPicture onclick="togglePlayVSL()">
+      <video id="vslVideo" class="vsl-video" preload="metadata" disablePictureInPicture style="pointer-events: none;">
         <source src="https://res.cloudinary.com/dw4df9eqz/video/upload/1000299540_bjzo54.mp4" type="video/mp4">
         Tu navegador no soporta video HTML5
       </video>
-      <!-- Ícono play centrado, desaparece al reproducir -->
+      <!-- Capa que captura todos los clics sobre el video -->
       <div id="vslPlayOverlay" onclick="togglePlayVSL()" style="
         position: absolute;
         top: 0; left: 0;
@@ -654,6 +632,7 @@ fbq('track', 'PageView');
         cursor: pointer;
         background: rgba(0,0,0,0.15);
         transition: opacity 0.2s;
+        z-index: 5;
       ">
         <div style="
           width: 60px; height: 60px;
@@ -1039,11 +1018,15 @@ function inicializarVSL() {
   });
 
   video.addEventListener("play", function() {
-    document.getElementById("vslPlayOverlay").style.display = "none";
+    const overlay = document.getElementById("vslPlayOverlay");
+    overlay.style.background = "transparent";
+    overlay.querySelector("div").style.display = "none";
   });
 
   video.addEventListener("pause", function() {
-    document.getElementById("vslPlayOverlay").style.display = "flex";
+    const overlay = document.getElementById("vslPlayOverlay");
+    overlay.style.background = "rgba(0,0,0,0.15)";
+    overlay.querySelector("div").style.display = "flex";
     if (!videoCompleto && video.currentTime > 0 && video.currentTime < video.duration) {
       blockedOverlay.classList.add("active");
     }
@@ -1064,8 +1047,9 @@ function togglePlayVSL() {
   const video = document.getElementById("vslVideo");
   if (video.paused) {
     video.play();
+  } else {
+    video.pause();
   }
-  // Si está reproduciendo, el clic no pausa — el overlay maneja eso
 }
 
 function reanudarVideo() {
